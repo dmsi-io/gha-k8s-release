@@ -121,7 +121,7 @@ runs:
     - name: Replace Variables
       run: |
         for filename in *; do
-          envsubst < "$filename" > "$filename"
+          envsubst < "$filename" | sponge "$filename"
         done
       working-directory: ${{ inputs.k8s_directory }}
       shell: bash
