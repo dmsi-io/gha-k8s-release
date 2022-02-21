@@ -18,6 +18,7 @@ jobs:
           author_name: ${{ secrets.PUBLIC_GHA_ACCESS_USER }}
           author_email: ${{ secrets.PUBLIC_GHA_ACCESS_EMAIL }}
           k8s_config_repo: dmsi-io/gha-go-deploy
-          new_branch: release/v1.0.0
+          branch: release/v1.0.0
+          new_branch: test/${{ github.sha }}
           skip_tag: true
           GCP_PROJECT_ID: gcp-project-id
