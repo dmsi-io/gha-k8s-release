@@ -120,6 +120,8 @@ runs:
 
     - name: Replace Variables
       run: |
+        sudo apt-get install -y moreutils # add sponge CLI tool
+
         for filename in *; do
           envsubst < "$filename" | sponge "$filename"
         done
