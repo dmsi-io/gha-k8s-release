@@ -110,7 +110,7 @@ runs:
       shell: bash
 
     - name: Export Environment Variables
-      uses: dmsi-io/gha-env-variables@v1
+      uses: dmsi-io/gha-env-variables@v1.2
       with:
         TLD: ''
         GCP_PROJECT_ID: ${{ inputs.GCP_PROJECT_ID }}
