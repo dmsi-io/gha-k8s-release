@@ -121,7 +121,7 @@ runs:
     - name: Replace Variables
       run: |
         for filename in ${{ inputs.k8s_directory }}/*; do
-          cat "$filename" | envsubst > "$filename"
+          envsubst < "$filename"
         done
       shell: bash
 
