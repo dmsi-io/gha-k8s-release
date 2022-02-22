@@ -15,8 +15,8 @@ This GitHub Action is a composite action that handles the pulling and population
 | `force_tag`          | Flag to force tag.                                                                                | `bool`   | `false`   | `false`                     |
 | `skip_tag`           | Flag to skip tagging.                                                                             | `bool`   | `false`   | `false`                     |
 | `new_branch`         | Name of new branch to commit changes to. (used more so to test this repo)                         | `string` | `false`   |                             |
-| `author_name`        | The author name to use for the back merge.                                                        | `string` | `false`   | `github-actions`            |
-| `author_email`       | The email to use for the back merge.                                                              | `string` | `false`   | `github-actions@github.com` |
+| `author_name`        | The author name to use for the commit.                                                            | `string` | `false`   | `github-actions`            |
+| `author_email`       | The email to use for the commit.                                                                  | `string` | `false`   | `github-actions@github.com` |
 | `k8s_directory`      | Location of k8s config files.                                                                     | `string` | `false`   | `k8s`                       |
 | `k8s_config_repo`    | Name of repo that may contain additional default Kubernetes config files.                         | `string` | `false`   |                             |
 | `k8s_repo_directory` | Location of repo k8s config files.                                                                | `string` | `false`   | `k8s`                       |

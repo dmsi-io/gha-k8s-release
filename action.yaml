@@ -29,12 +29,12 @@ inputs:
     required: false
 
   author_name:
-    description: 'The author name to use for the merge'
+    description: 'The author name to use for the commit.'
     required: false
     default: 'github-actions'
 
   author_email:
-    description: 'The email to use for the merge'
+    description: 'The email to use for the commit'
     required: false
     default: 'github-actions@github.com'
 
