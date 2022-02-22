@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gha-k8s-release
+  labels:
+    app: gha-k8s-release
+spec:
+  replicas: 1
+  revisionHistoryLimit: 5
+  selector:
+    matchLabels:
+      app: gha-k8s-release
+  template:
+    metadata:
+      name: gha-k8s-release
+      labels:
+        app: gha-k8s-release
+        tier: web
+    spec:
+      containers:
+        - name: gha-k8s-release
+          image: gcr.io/gcp-project-id/gha-k8s-release:5750d22
+          imagePullPolicy: Always
+          envFrom:
+            - configMapRef:
+                name: redis-env
+          ports:
+            - name: web
+              containerPort: 8080
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 15
+            timeoutSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 5
+            timeoutSeconds: 3
