@@ -1,0 +1,147 @@
+name: 'Prepare Kubernetes Release'
+description: 'Prepares a Kubernetes release by pulling in and populated K8S configs with environment variables and tagging the branch.'
+
+inputs:
+  GITHUB_TOKEN:
+    description: 'GitHub Action Token or PAT'
+    required: true
+
+  semver_tag:
+    description: 'Semver Tag. If not included, will not tag the repo.'
+    required: false
+
+  branch:
+    description: 'Branch override value.'
+    required: false
+
+  force_tag:
+    description: 'Flag to force tag.'
+    required: false
+    default: 'false'
+
+  skip_tag:
+    description: 'Flag to skip tagging.'
+    required: false
+    default: 'false'
+
+  new_branch:
+    description: 'Name of new branch to commit changes to.'
+    required: false
+
+  author_name:
+    description: 'The author name to use for the commit.'
+    required: false
+    default: 'github-actions'
+
+  author_email:
+    description: 'The email to use for the commit'
+    required: false
+    default: 'github-actions@github.com'
+
+  k8s_directory:
+    description: 'Location of k8s config files.'
+    required: false
+    default: 'k8s'
+
+  k8s_config_repo:
+    description: 'Name of repo that may contain additional default Kubernetes config files.'
+    required: false
+
+  k8s_repo_directory:
+    description: 'Location of repo k8s config files.'
+    required: false
+    default: 'k8s'
+
+  GCP_PROJECT_ID:
+    description: 'ProjectID of the GCP project to deploy to.'
+    required: false
+
+  REGISTRY_HOSTNAME:
+    description: 'Hostname of Container Registry.'
+    default: 'gcr.io'
+    required: false
+
+  SERVICE_NAME:
+    description: 'Allows to override the desired SERVICE_NAME variable.'
+    required: false
+    default: ${{ github.repository }}
+
+runs:
+  using: composite
+  steps:
+    - name: Get Ref
+      id: get_ref
+      uses: dmsi-io/gha-get-ref@v1
+      with:
+        custom_ref: ${{ inputs.branch }}
+
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        token: ${{ inputs.GITHUB_TOKEN }}
+        ref: ${{ steps.get_ref.outputs.ref_name }}
+
+    ###### Checkout and setup Kubernetes configs
+
+    - name: Checkout K8S Config repo
+      if: inputs.k8s_config_repo != '' && inputs.skip_k8s_release != 'true'
+      uses: actions/checkout@v2
+      with:
+        token: ${{ inputs.GITHUB_TOKEN }}
+        repository: ${{ inputs.k8s_config_repo }}
+        path: ${{ inputs.k8s_config_repo }}
+
+    - name: Create k8s directory
+      if: inputs.k8s_config_repo != '' && inputs.skip_k8s_release != 'true'
+      run: mkdir -p ${{ inputs.k8s_directory }}
+      shell: bash
+
+    - name: Copy missing k8s config files
+      if: inputs.k8s_config_repo != '' && inputs.skip_k8s_release != 'true'
+      run: cp -inv ${{ inputs.k8s_config_repo }}/${{ inputs.k8s_repo_directory }}/* ${{ inputs.k8s_directory }}
+      shell: bash
+
+    - name: Export Environment Variables
+      uses: dmsi-io/gha-env-variables@v1.2
+      with:
+        TLD: ''
+        GCP_PROJECT_ID: ${{ inputs.GCP_PROJECT_ID }}
+        SERVICE_NAME: ${{ inputs.SERVICE_NAME }}
+        NAMESPACE: ${{ steps.get_ref.outputs.ref_name }}
+        REGISTRY_HOSTNAME: ${{ inputs.REGISTRY_HOSTNAME }}
+
+    - name: Replace Variables
+      run: |
+        sudo apt-get install -y moreutils # add sponge CLI tool
+
+        for filename in *; do
+          envsubst < "$filename" | sponge "$filename"
+        done
+      working-directory: ${{ inputs.k8s_directory }}
+      shell: bash
+
+    ###### Commit Change and Tag
+
+    - name: Create Tag Strategy
+      if: inputs.semver_tag != '' && inputs.skip_tag != 'true'
+      id: tag
+      run: |
+        TAG="${{ inputs.semver_tag }}"
+
+        if [[ "${{ inputs.force_tag }}" = "true" ]]; then
+          TAG="$TAG --force"
+        fi
+
+        echo "::set-output name=strategy::$TAG"
+      shell: bash
+
+    - name: Commit Changes and Tag
+      # Commit equivalent to https://github.com/EndBug/add-and-commit/releases/tag/v8.0.2
+      uses: EndBug/add-and-commit@72e246094f1af94def5a07467cd789c503ae8be0
+      with:
+        default_author: user_info
+        author_name: ${{ inputs.author_name }}
+        author_email: ${{ inputs.author_email }}
+        new_branch: ${{ inputs.new_branch }}
+        tag: ${{ steps.tag.outputs.strategy }}
+        add: ${{ inputs.k8s_directory }}

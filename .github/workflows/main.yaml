@@ -1,0 +1,24 @@
+name: Test gha-k8s-release
+
+on:
+  push:
+    branches:
+      - feature/*
+
+jobs:
+  test-gha-k8s-release:
+    runs-on: ubuntu-latest
+    name: Test gha-k8s-release
+    steps:
+      - name: Test Run
+        id: release
+        uses: dmsi-io/gha-k8s-release@feature/HOU-166
+        with:
+          GITHUB_TOKEN: ${{ secrets.PUBLIC_GHA_ACCESS_TOKEN }}
+          author_name: ${{ secrets.PUBLIC_GHA_ACCESS_USER }}
+          author_email: ${{ secrets.PUBLIC_GHA_ACCESS_EMAIL }}
+          k8s_config_repo: dmsi-io/gha-go-deploy
+          # branch: release/v1.0.0 # for testing release branch semver tag
+          new_branch: test/${{ github.sha }}
+          skip_tag: true
+          GCP_PROJECT_ID: gcp-project-id
