@@ -12,7 +12,7 @@ This GitHub Action is a composite action that handles the pulling and population
 | `GITHUB_TOKEN`       | GitHub Action Token or PAT.                                                                       | `string` | `true`    | `''`                        |
 | `semver_tag`         | Semver Override Tag. This value will always be used if provided.                                  | `string` | `false`   | `null`                      |
 | `branch`             | Branch override value.                                                                            | `string` | `false`   |                             |
-| `force_tag`          | Flag to force tag.                                                                                | `bool`   | `false`   | `true`                      |
+| `force_tag`          | Flag to force tag.                                                                                | `bool`   | `false`   | `false`                     |
 | `skip_tag`           | Flag to skip tagging.                                                                             | `bool`   | `false`   | `false`                     |
 | `new_branch`         | Name of new branch to commit changes to. (used more so to test this repo)                         | `string` | `false`   |                             |
 | `author_name`        | The author name to use for the back merge.                                                        | `string` | `false`   | `github-actions`            |

@@ -17,7 +17,7 @@ inputs:
   force_tag:
     description: 'Flag to force tag.'
     required: false
-    default: 'true'
+    default: 'false'
 
   skip_tag:
     description: 'Flag to skip tagging.'
