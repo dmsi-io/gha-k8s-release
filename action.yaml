@@ -84,7 +84,7 @@ runs:
     ###### Checkout and setup Kubernetes configs
 
     - name: Checkout K8S Config repo
-      if: inputs.k8s_config_repo != '' && inputs.skip_k8s_release != 'true'
+      if: inputs.k8s_config_repo != ''
       uses: actions/checkout@v2
       with:
         token: ${{ inputs.GITHUB_TOKEN }}
@@ -92,12 +92,12 @@ runs:
         path: ${{ inputs.k8s_config_repo }}
 
     - name: Create k8s directory
-      if: inputs.k8s_config_repo != '' && inputs.skip_k8s_release != 'true'
+      if: inputs.k8s_config_repo != ''
       run: mkdir -p ${{ inputs.k8s_directory }}
       shell: bash
 
     - name: Copy missing k8s config files
-      if: inputs.k8s_config_repo != '' && inputs.skip_k8s_release != 'true'
+      if: inputs.k8s_config_repo != ''
       run: cp -inv ${{ inputs.k8s_config_repo }}/${{ inputs.k8s_repo_directory }}/* ${{ inputs.k8s_directory }}
       shell: bash
 
