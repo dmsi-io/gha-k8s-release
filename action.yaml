@@ -132,7 +132,7 @@ runs:
           TAG="$TAG --force"
         fi
 
-        echo "::set-output name=strategy::$TAG"
+        echo "strategy=$TAG" >> $GITHUB_OUTPUT
       shell: bash
 
     - name: Commit Changes and Tag
