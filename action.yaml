@@ -85,7 +85,7 @@ runs:
 
     - name: Checkout K8S Config repo
       if: inputs.k8s_config_repo != '' && inputs.skip_k8s_release != 'true'
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         token: ${{ inputs.GITHUB_TOKEN }}
         repository: ${{ inputs.k8s_config_repo }}
@@ -102,7 +102,7 @@ runs:
       shell: bash
 
     - name: Export Environment Variables
-      uses: dmsi-io/gha-env-variables@v1.2
+      uses: dmsi-io/gha-env-variables@v1
       with:
         TLD: ''
         GCP_PROJECT_ID: ${{ inputs.GCP_PROJECT_ID }}
