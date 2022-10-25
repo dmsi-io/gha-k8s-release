@@ -8,7 +8,7 @@ This GitHub Action is a composite action that handles the pulling and population
 ## Inputs
 
 | NAME                 | DESCRIPTION                                                                                       | TYPE     | REQUIRED  | DEFAULT                     |
-| -------------------- | ------------------------------------------------------------------------------------------------- | -------- | --------- | --------------------------- |
+|----------------------|---------------------------------------------------------------------------------------------------|----------|-----------|-----------------------------|
 | `GITHUB_TOKEN`       | GitHub Action Token or PAT.                                                                       | `string` | `true`    | `''`                        |
 | `semver_tag`         | Semver Override Tag. This value will always be used if provided.                                  | `string` | `false`   | `null`                      |
 | `branch`             | Branch override value.                                                                            | `string` | `false`   |                             |
@@ -49,8 +49,6 @@ jobs:
           k8s_config_repo: dmsi-io/gha-go-deploy
           GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
 ```
-
-For a further practical example, see [.github/workflows/release.yml](.github/workflows/main.yml).
 
 <!-- badge links -->
 
